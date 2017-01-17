@@ -19,3 +19,4 @@
   after_script: npm coveralls
   script:
     - npm test
+    - npm lint
