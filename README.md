@@ -11,7 +11,9 @@ An app that helps users easily plan transferring from a 2 Year Community College
 ## Installing
 1. In your terminal, clone down a local copy of the repo
 
-```git clone https://github.com/jessicamvs/back-end-project.git```
+``` bash
+$ git clone https://github.com/jessicamvs/back-end-project.git
+```
 
 2. In your terminal type in
 ```
