@@ -10,18 +10,13 @@ An app that helps users easily plan transferring from a 2 Year Community College
 
 ## Installing
 1. In your terminal, clone down a local copy of the repo
-
-``` bash
-$ git clone https://github.com/jessicamvs/back-end-project.git
+```
+git clone https://github.com/jessicamvs/back-end-project.git
 ```
 
-2. In your terminal type in
-```
-npm install
-```
-to install all necessary packages
+2. In your terminal type in ```npm install``` to install all necessary packages
 
-3. To start the server type into your terminal ```npm index.js```
+3. To start the server type into your terminal ```node index.js```
 
 3. Begin planning your future!
 
@@ -31,44 +26,43 @@ to install all necessary packages
 
 ## Routes
 
-### Signup/Login (auth-routes)
+### Signup/Login
 #### POST /signup
-  -  A new user is authenticated by signing up with a unique username and password. Specifying whether you are an admin or not upon signup will allow you access to certain routes. Upon success, users are returned a token which provides authorization to access certain routes.
-      - Expected body:
-        ``` js
-        {
-        "username": "<string>",
-        "password": "<string>",
-        "admin": <true/false>
-        }
-        ```
+A new user is authenticated by signing up with a unique username and password. Specifying whether you are an admin or not upon signup will allow you access to certain routes. Upon success, users are returned a token which provides authorization to access certain routes.
+  - Expected Header:
 
-      - Example Response(token):
-      ```
-      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4ODk1ODFmZDA0ZDFhMmIyOWM5NjQyZCIsImlhdCI6MTQ4NTM5NTk5OX0.8_Zijpib85BGwh99IUHlrGjhT59EzigyTp8fssgSE48
-      ```
+  ```
+  Content-Type: 'application/json'
+  ```
+  - Expected Body:
+    ``` js
+    {
+    "username": <string>,
+    "password": <string>,
+    "admin": <boolean>
+    }
+    ```
+
+  - Example Response (token):
+  ```
+  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4ODk1ODFmZDA0ZDFhMmIyOWM5NjQyZCIsImlhdCI6MTQ4NTM5NTk5OX0.8_Zijpib85BGwh99IUHlrGjhT59EzigyTp8fssgSE48
+  ```
 
 #### GET /login
-  - A returning user will be required to provide their unique username and password in order to be authorized to use the app. Logging in will return a new token for future user reference
 
-  - Expected header:
-  ```
-  Authorization: 'Bearer <token>'
-  ```
-  - Provide username and password in JSON format:
-    ```
-        {
-        "username": "string",
-        "password": "string",
-        }
-    ```
+A returning user will be required to provide their unique username and password in order to be authorized to use the app. Logging in will return a new token for future user reference.
 
-   - Example Response(token):
-```
-   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4ODk1ODFmZDA0ZDFhMmIyOWM5NjQyZCIsImlhdCI6MTQ4NTM5NTk5OX0.8_Zijpib85BGwh99IUHlrGjhT59EzigyTp8fssgSE48
+- Expected Header:
+  ```
+  Authorization: 'Basic <base64 encoded username:password>'
+  ```
+
+- Example Response (token):
+ ```
+ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4ODk1ODFmZDA0ZDFhMmIyOWM5NjQyZCIsImlhdCI6MTQ4NTM5NTk5OX0.8_Zijpib85BGwh99IUHlrGjhT59EzigyTp8fssgSE48
  ```
 
-### Login/Sigunp Error Handling
+#### Login/Signup Error Handling
 - 200 upon successful signup or login
 - 400 BadRequestError if no username provided upon signup
 - 400 BadRequestError if no password provided upon signup
@@ -76,109 +70,21 @@ to install all necessary packages
 - 401 UnauthorizedError if incorrect password is provided upon login
 - 409 ConflictError for duplicate username upon signup
 
-
-
-#### Community College Course Routes
-This route will allow both students and administrators to input new courses as well as update, view or delete courses. Students can only add to their personal course list whereas administrators are able to add, edit and delete courses from the main Community College course list.  
+### Community College Course Routes
+These routes will allow both students and administrators to input new courses as well as update, view or delete courses. Students can only add to their personal course list whereas administrators are able to add, edit and delete courses from the main Community College course list.  
 
 #### GET /cccourses
- Student and Admin (unauthenticated)
+Students, Admins, and unauthenticated users can access this route and receive a full listing of all available Community College courses.
 
- Example: [http://localhost:3000/cccourses](http://localhost:3000/cccourses)
+ - Example Response:
 
- Students and Admins can, as unauthenticated users on this route, receive a full listing of all available Community College courses.  
-
- Example Response:
+ ``` javascript
+ { _id: 588ade5b1876df938d1b309a,
+   code: 'MATH 151',
+   uwequiv: 588addb41876df938d1b3095,
+   __v: 0 },
+ { _id: 588ade941876df938d1b309b,
+   code: 'MATH 152',
+   uwequiv: 588addb41876df938d1b3093,
+   __v: 0 }
  ```
- {
-  "_id" : ObjectId("58894cb409ecbe1d2700c0f2"),
- "username" : "franklinhardesty",
- "password" : "testpass",
- "admin" : true,
- "univ_classes" : [ ],
- "curr_courses" : [ ], "__v" : 0
-}
- ```
-
-
-#### POST /cccourses
-Students (authenticated)
-
-Example: [http://localhost:3000/cccourses](http://localhost:3000/cccourses)
-
-Students can, while authenticated, only add new Community College courses to their personal list.  They are not allowed to post courses to the primary Community College course list.
-
-- Authorization Header
-  - Bearer <user token>
-
-- Required fields (in the body):
-  - Code (class name) - Must be a string
-
-
-Administrators (authenticated)
-
-Example: [http://localhost:3000/cccourses](http://localhost:3000/cccourses)
-
-Administrators can, while authenticated, only add new courses to the primary Community College course list.  They are not allowed to post courses to any student's personal course list.
-
-- Authorization Header
-  - Bearer <user token>
-
-- Required fields (in the body):
-  - Code (class name) - Must be a string
-
-  Example Response:
-  ```
-  {
-  "_id" : ObjectId("58894cb309ecbe1d2700c0ef"),
-  "code" : "MATH 151", "__v" : 0,
-  "uwequiv" : ObjectId("58894cb309ecbe1d2700c0ee")
-  }
-  ```
-
-#### PUT /cccourses/:id
-Administrators (authenticated)
-
-Example: [http://localhost:3000/cccourses/58894cb309ecbe1d2700c0ed](http://localhost:3000/cccourses/58894cb309ecbe1d2700c0ed)
-
-Administrators can, while authenticated, update existing courses within the primary Community College course list.  They are not allowed to update courses within any student listing.
-
-- Authorization Header
-  - Bearer <user token>
-
-- Required fields (in the body):
-  - Code (class name) - Must be a string
-
-#### DELETE /cccourses/:id
-Students and Administrators (authenticated)
-
-Example: [http://localhost:3000/cccourses/58894cb309ecbe1d2700c0ed](http://localhost:3000/cccourses/58894cb309ecbe1d2700c0ed)
-
-Students are allowed, while authenticated, to delete courses from their personal course list only.  They may not remove courses from the primary Community College course list.
-
-Administrators are allowed, while authenticated, to delete existing courses within the primary Community College course list.  They are not allowed to delete courses within any student listing.
-
-- Authorization Header
-  - Bearer <user token>
-
-- Required fields:
-  - Course ID
-
-### Error Responses for CCCourses Routes
-- 200 - Everything is OK (You're cool.)
-- 204 - No Content (Delete route worked.)
-- 400 - Bad Request (You did something wrong.)
-- 401 - Not Authorized (You can't go past the velvet rope.)
-- 404 - Not Found (Like my parents when I was 5.  I found them later, when I was 12.)
-- 500 - Internal Server Error (You'd better call someone.)
-
-## Testing Framework
-- Mocha
-- Chai (Expect)
-- Eslint
-
-## Contributors
-+ [Jessica Vasquez-Soltero](https://github.com/jessicamvs "Jessica's Github")
-+ [Jonathan Daniel](https://github.com/spamalope01 "Jonathan's Github")
-+ [Jacob Isenberg](https://github.com/jisenber "Jacob's Github")
-+ [Carolina Vasquez-Ceja](http://github.com/cejac "Carolina's Github")
